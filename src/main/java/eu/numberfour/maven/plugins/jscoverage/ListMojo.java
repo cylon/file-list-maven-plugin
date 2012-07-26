@@ -25,7 +25,7 @@ import com.google.gson.GsonBuilder;
  * 
  * @goal list
  * @requiresDependencyResolution compile
- * @description Creates a JSON-formatted list of files
+ * @description Creates a list of files.  The supported types are JSON, text, or JUnit test suite.
  */
 public class ListMojo extends AbstractMojo {
 
@@ -70,6 +70,8 @@ public class ListMojo extends AbstractMojo {
     public String[] excludes;
 
     /**
+     * Supported types are "json", "text", and "junit".
+     *
      * @parameter default-value="json"
      */
     public String type;
@@ -112,6 +114,11 @@ public class ListMojo extends AbstractMojo {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String json = gson.toJson(includedFiles);
                 fileWriter.write(json);
+            } else if ("text".equals(this.type)) {
+                for (String f : includedFiles) {
+                   fileWriter.write(f);
+                   fileWriter.write(NEW_LINE);
+                }
             } else if ("junit".equals(this.type)) {
                 StringBuilder suiteContent = new StringBuilder();
                 suiteContent.append("package n4.quat.selenium.acceptancetest.suites;");
