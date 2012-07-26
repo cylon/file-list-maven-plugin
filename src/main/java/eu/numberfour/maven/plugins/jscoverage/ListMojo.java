@@ -83,6 +83,13 @@ public class ListMojo extends AbstractMojo {
      */
     public boolean caseSensitive;
 
+    /**
+     * Whether to prefix the file with a '/'
+     * 
+     * @parameter
+     */
+    public boolean includeSlashPrefix;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         FileWriter fileWriter = null;
@@ -96,6 +103,7 @@ public class ListMojo extends AbstractMojo {
             log.info("Includes: " + Arrays.toString(this.includes));
             log.info("Exludes:  " + Arrays.toString(this.excludes));
             log.info("Type:  " + this.type);
+            log.info("Include /:  " + this.includeSlashPrefix);
 
             DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir(this.baseDir);
@@ -109,6 +117,12 @@ public class ListMojo extends AbstractMojo {
             log.info("File list contains " + includedFiles.length + " files");
 
             fileWriter = new FileWriter(this.outputFile);
+
+            if (this.includeSlashPrefix) {
+                for (int i = 0; i < includedFiles.length; ++i) {
+                    includedFiles[i] = "/" + includedFiles[i];
+                }
+            }
 
             if ("json".equals(this.type)) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
