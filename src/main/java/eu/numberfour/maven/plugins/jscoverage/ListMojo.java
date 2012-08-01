@@ -1,5 +1,6 @@
 package eu.numberfour.maven.plugins.jscoverage;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -115,6 +116,9 @@ public class ListMojo extends AbstractMojo {
             String[] includedFiles = scanner.getIncludedFiles();
 
             log.info("File list contains " + includedFiles.length + " files");
+
+            // Create the directories for the file
+            new File(this.outputFile).getParentFile().mkdirs();
 
             fileWriter = new FileWriter(this.outputFile);
 
